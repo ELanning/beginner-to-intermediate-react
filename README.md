@@ -21,8 +21,6 @@
 
 This work is intended for readers who are familiar with TypeScript and React syntax and idioms, who are not necessarily experts. The reader may have created a handful of React components. Experienced programmers can quickly get up to speed by reading the [TypeScript](https://www.typescriptlang.org/docs/) and [React documentation](https://reactjs.org/docs/getting-started.html).
 
-
-
 ## Tools
 
 > "A man is only as good as his tools." - Emmert Wolf
@@ -33,13 +31,9 @@ Static analysis finds code issues automatically and can save hours of developmen
 
 A code formatting tool keeps stylistic consistency (tabs vs spaces) across source code. It is unrealistic to expect anyone to remember all stylistic choices at all times, even if they're thoroughly documented. Nor is it a good use of time to repeatedly debate stylistic choices. [Prettier](https://prettier.io/) is a solid code formatting tool with VS Code support that can be configured to specific needs and supports formatting on save. It can also be configured to run on git check-out and check-in.
 
-
-
 ## Fundamentals Through The Lens of React
 
 There are many guidelines and heuristics that software developers apply when writing code. As a beginner, it is impossible to keep them in mind at all times. As experience grows, guidelines become part of the subconscious. Stating guidelines is easy. However, internalizing, understanding, and feeling the deeper meaning requires years of effort. It is still useful to share a small fraction of these guidelines and provide demonstrative examples. Knowing such guidelines allows a framework for evaluation, and a path towards improvement. For brevity, many guidelines will not be covered. However, entire books have been written on guidelines and are available for the curious reader. The references provide a great start for additional reading [[1]](#References)[[2]](#References)[[3]](#References)[[4]](#References)[[5]](#References)[[6]](#References).
-
-
 
 ### Simplicity
 
@@ -57,16 +51,14 @@ Programmers are adept at seeing patterns, sometimes in a disadvantageous way. Un
 
 In the proceeding sections, guidelines to move the needle towards simplicity will be given.
 
-
-
 ### Abstraction
 
 Simplicity flows from many factors. To begin with, simple code minimizes the chunks of information a programmer must keep in working memory. Clean abstractions can do just that. For example, making an HTTP request in JavaScript is as simple as `fetch('http://news.com/daily-stories.json')`. The author need not understand the seven layers of the networking OSI model, which contains hundreds of definitions, rules, and semantics. Thus, even if the interface of `fetch` could be improved, programmers are thankful to avoid manually setting up TCP handshakes. An exemplary React component of good abstraction might look like-so.
 
-```react
+```jsx
 <CreditCardForm
-	onSuccess={transactionInfo => ...}
-	onPending={transactionInfo => ...}
+    onSuccess={transactionInfo => ...}
+    onPending={transactionInfo => ...}
     onFailure={(transactionInfo, errorCode) => ...}
 />
 ```
@@ -77,30 +69,26 @@ Good abstractions typically follow an "onion" approach. High level components si
 
 Abstractions can present themselves naturally by representing the domain. For example if the domain is a hospital web app, finding a `PatientPortal` component or a `MedicalRecord` component is not surprising. When components roughly represent reality, a maintainer's intuition allows for easy searching of abstractions and provide clean delineation of boundaries. If such abstractions do not become apparent, it could be a sign that the domain is poorly understood. More exploration and requirements gathering may be necessary.
 
-
-
 ### Conceptual Integrity
 
 Good abstractions have clean _conceptual integrity_. They are not vague, e.g. `ThingDoerComponent`, nor are they a mishmash of random features bundled together. They have well defined boundaries. A `Button` component should not have a `currentTemperature` prop. The concept should live in the `WeatherDashboard` and be passed to the `Button` through a clean interface.
 
-```react
+```jsx
 // In WeatherDashboard.tsx
 function WeatherDashboard(...) {
 ...
-   return (
-   	<div>
-   		...
-   		<Button onClick={() => alert(currentTemperature)}>
-   			Show current temperature
-        </Button>
-   	</div>
-   );
+    return (
+        <div>
+            ...
+            <Button onClick={() => alert(currentTemperature)}>
+                Show current temperature
+            </Button>
+        </div>
+    );
 }
 ```
 
 At lower levels, this becomes obvious, but this should be the case in the mid to higher levels of abstraction as well. Deciding what concepts each component should know about, and _not_ know about is a hard task and often only learned through practice. When building components, each prop should be scrutinized as a concept the component knows about. If it feels as-if the component "knows too much", the interface should be generalized to support the needed functionality. In the `Button` example above; the button does not have a `currentTemperature` prop, but it supports the functionality _indirectly_ with callbacks and lower level primitives, such as generic strings.
-
-
 
 ### DRY
 
@@ -112,33 +100,31 @@ SPOT does not only apply to variables. It also applies to code itself: functions
 
 Another form of duplication is _syntactical duplication_. In this case some lines of code or parameters are repeated. It typically looks like this.
 
-```react
+```jsx
 <Button color="green" fontSize="22" .../>
 
 // Becomes:
 <LargeGreenButton .../>
 const LargeGreenButton = ({children, ...rest}) => (
-	<Button {...rest} color="green" fontSize="22">
-		{children}
-	</Button>
+    <Button {...rest} color="green" fontSize="22">
+        {children}
+    </Button>
 );
 ```
 
 There is nothing inherently wrong with DRY-ing up syntactical duplication. When applicable, it is less appealing than refactoring duplication into domain components. This would look more like so.
 
-```react
+```jsx
 <Button color="green" fontSize="22" ...>
 
 // Button is refactored into a domain component:
 <PurchaseButton .../>
 const PurchaseButton = ({children, ...rest}) => (
-	<Button {...rest} color="green" fontSize="22">
-		{children}
-	</Button>
+    <Button {...rest} color="green" fontSize="22">
+        {children}
+    </Button>
 );
 ```
-
-
 
 ## Beginner to Intermediate Refactoring
 
@@ -154,84 +140,91 @@ Refactoring rarely modified or used code is effort better spent elsewhere. Not e
 
 Another important consideration is project size and complexity. Best practices for larger projects many not be applicable with prototypes or simple projects. If a programmer is only familiar with smaller, less complex projects, many of these recommendations will rightfully come across as needless or overly complicating.
 
-
-
 ### Component Design and Boolean Props
 
 When a new requirement is presented, tacking on functionality with a Boolean prop is tempting. It's straightforward and requires little thought. Take for example, a `HotDogStand` component that originally listed a few prices and displayed a banner. The owner, Frank, now wants to add lemonade to a few stands. Here's how this would be included using a Boolean prop.
 
-```react
-import React from 'react';
+```jsx
+import React from "react";
 
 interface Props {
-    bannerTextColor: string;
-    hasLemonade: boolean;
+  bannerTextColor: string;
+  hasLemonade: boolean;
 }
 
 function HotDogStand(props: Props) {
-    const { bannerTextColor, hasLemonade } = props;
-	const bannerText = "Frank's Hot Dogs" + (hasLemonade ? " And Lemonade" : "");
-    return (
-        <div>
-            <div style={{"color": bannerTextColor}}>{bannerText}</div>
-            <ul>
-            	<li>Regular Dog $4.99</li>
-                <li>Chili Dog $6.99</li>
-                <li>Double Dog $7.99</li>
-                {hasLemonade && <li>Lemonade $2.99</li>}
-            </ul>
-        </div>
-    );
+  const { bannerTextColor, hasLemonade } = props;
+  const bannerText = "Frank's Hot Dogs" + (hasLemonade ? " And Lemonade" : "");
+  return (
+    <div>
+      <div style={{ color: bannerTextColor }}>{bannerText}</div>
+      <ul>
+        <li>Regular Dog $4.99</li>
+        <li>Chili Dog $6.99</li>
+        <li>Double Dog $7.99</li>
+        {hasLemonade && <li>Lemonade $2.99</li>}
+      </ul>
+    </div>
+  );
 }
 ```
 
 Not hard to understand, but this won't scale as requirements grow. Inevitably, Frank will want to add more menu items. He'll want to change the banner text. The banner text color may be different based on menu items or day of the week. If more Boolean flags are added to support these requirements, the code becomes increasingly tangled, opaque, and cemented. Here's how the component may look in a year if this continues.
 
-```react
-import React from 'react';
+```jsx
+import React from "react";
 
 interface Props {
-    bannerTextColor: string;
-    hasLemonade: boolean;
-    hasChurros: boolean;
-    hasSoda: boolean;
-    isOutOfRegularHotDogs: boolean;
-    isDoubleDogTuesday: boolean;
-    isHomeGameDealsOn: boolean;
-    isBreastCancerAwarenessMonth: boolean;
+  bannerTextColor: string;
+  hasLemonade: boolean;
+  hasChurros: boolean;
+  hasSoda: boolean;
+  isOutOfRegularHotDogs: boolean;
+  isDoubleDogTuesday: boolean;
+  isHomeGameDealsOn: boolean;
+  isBreastCancerAwarenessMonth: boolean;
 }
 
 function HotDogStand(props: Props) {
-    const {
-        bannerTextColor,
-        hasLemonade,
-        hasChurros,
-        hasSoda,
-        isOutOfRegularHotDogs,
-        isDoubleDogTuesday,
-        isHomeGameDealsOn,
-        isBreastCancerAwarenessMonth
-    } = props;
-	const bannerText = "Frank's Hot Dogs" + (hasLemonade && !hasChurros ? " And Lemonade" : "");
-    const regularDogPrice = isHomeGameDealsOn ? "$2.99" : "4.99"
-	const regularDogText = isOutOfRegularHotDogs ?
-          <s>{`Regular Dog ${regularDogPrice}`}</s> : "Regular Dog " + regularDogPrice;
-    const chiliDogPrice = isHomeGameDealsOn ? "$5.99" : "6.99";
-    return (
-        <div>
-            <div style={{"color": isBreastCancerAwarenessMonth ? "pink" : bannerTextColor}}>
-                {bannerText}
-            </div>
-            <ul>
-                <li>{regularDogText}</li>
-                <li>Chili Dog {chiliDogPrice}</li>
-                <li>Double Dog {isDoubleDogTuesday ? "$5.99" : "$7.99"}</li>
-                {hasLemonade && <li>Lemonade $2.99</li>}
-                {hasSoda && <li>Soda $0.99</li>}
-                {hasChurros && <li>Churro $1.99</li>}
-            </ul>
-        </div>
-    );
+  const {
+    bannerTextColor,
+    hasLemonade,
+    hasChurros,
+    hasSoda,
+    isOutOfRegularHotDogs,
+    isDoubleDogTuesday,
+    isHomeGameDealsOn,
+    isBreastCancerAwarenessMonth,
+  } = props;
+  const bannerText =
+    "Frank's Hot Dogs" + (hasLemonade && !hasChurros ? " And Lemonade" : "");
+  const regularDogPrice = isHomeGameDealsOn ? "$2.99" : "4.99";
+  const regularDogText = isOutOfRegularHotDogs ? (
+    <s>{`Regular Dog ${regularDogPrice}`}</s>
+  ) : (
+    "Regular Dog " + regularDogPrice
+  );
+  const chiliDogPrice = isHomeGameDealsOn ? "$5.99" : "6.99";
+
+  return (
+    <div>
+      <div
+        style={{
+          color: isBreastCancerAwarenessMonth ? "pink" : bannerTextColor,
+        }}
+      >
+        {bannerText}
+      </div>
+      <ul>
+        <li>{regularDogText}</li>
+        <li>Chili Dog {chiliDogPrice}</li>
+        <li>Double Dog {isDoubleDogTuesday ? "$5.99" : "$7.99"}</li>
+        {hasLemonade && <li>Lemonade $2.99</li>}
+        {hasSoda && <li>Soda $0.99</li>}
+        {hasChurros && <li>Churro $1.99</li>}
+      </ul>
+    </div>
+  );
 }
 ```
 
@@ -239,12 +232,12 @@ The code has become a big ball of mud. As John Outserhout notes, bad software is
 
 There are many things markedly wrong with this code. A casual reader couldn't know what this invocation does without looking at the internals of `HotDogStand`.
 
-```react
+```jsx
 <HotDogStand
-    bannerTextColor={"blue"}
-    isBreastCancerAwarenessMonth={Date.now().getMonth() == OCTOBER} // What does this do?
-    isHomeGameDealsOn={checkIsHomeGame()} // What does this do?
-    hasLemonade={lemonadeCount > 0} // What does this do?
+  bannerTextColor={"blue"}
+  isBreastCancerAwarenessMonth={Date.now().getMonth() == OCTOBER} // What does this do?
+  isHomeGameDealsOn={checkIsHomeGame()} // What does this do?
+  hasLemonade={lemonadeCount > 0} // What does this do?
 />
 ```
 
@@ -266,24 +259,24 @@ As the requirements grew, all the underlying component needed was a way to chang
 
 The Boolean flag can be dissolved and replaced by this,
 
-```react
+```jsx
 const isBreastCancerAwarenessMonth = Date.now().getMonth() == OCTOBER;
 <HotDogStand
-	bannerTextColor={isBreastCancerAwarenessMonth ? "pink" : "blue"}
-    isHomeGameDealsOn={checkIsHomeGame()}
-    hasLemonade={lemonadeCount > 0}
-/>
+  bannerTextColor={isBreastCancerAwarenessMonth ? "pink" : "blue"}
+  isHomeGameDealsOn={checkIsHomeGame()}
+  hasLemonade={lemonadeCount > 0}
+/>;
 ```
 
 Moving on, the next features to support are `isHomeGameDealsOn` and `hasLemonade`. Both of which are values on the Menu axis. `hasLemonade` is also a value on the Banner axis. There are many ways to approach this refactor, each with varying advantages and disadvantages. Here is a straightforward way, but other approaches will be explored later.
 
-```react
+```jsx
 import React from 'react';
 
 interface MenuItem {
-	name: string;
-	price: string;
-	stock: number;
+    name: string;
+    price: string;
+    stock: number;
 }
 
 interface Props {
@@ -294,9 +287,9 @@ interface Props {
 
 export const standardBannerText = "Frank's Hot Dogs";
 export const standardMenu: MenuItem[] = Object.freeze([
-	{name: "Regular Dog", price: "$4.99", stock: 1000 },
+    {name: "Regular Dog", price: "$4.99", stock: 1000 },
     {name: "Chili Dog", price: "$6.99", stock: 1000 },
-	{name: "Double Dog", price: "$7.99", stock: 1000 },
+    {name: "Double Dog", price: "$7.99", stock: 1000 },
 ]);
 
 function HotDogStand(props: Props) {
@@ -307,8 +300,8 @@ function HotDogStand(props: Props) {
             <ul>
                 {'/* Name is treated as a unique key for convenience. */'}
                 {menuItems.map(item => stock > 0 ?
-                	<li key={item.name}>{`${item.name} ${item.price}`}</li> :
-                	<li key={item.name}><s>{`${item.name} ${item.price}`}</s></li>);
+                    <li key={item.name}>{`${item.name} ${item.price}`}</li> :
+                    <li key={item.name}><s>{`${item.name} ${item.price}`}</s></li>);
                 )}
             </ul>
         </div>
@@ -318,15 +311,14 @@ function HotDogStand(props: Props) {
 
 Consuming the component now looks like so.
 
-```react
+```jsx
 import { HotDogStand, standardMenuItems } ...;
 
 const isBreastCancerAwarenessMonth = Date.now().getMonth() == OCTOBER;
 const homeGameDealsMenu: MenuItem[] = Object.freeze([
-	{name: "Regular Dog", price: "$2.99", stock: 1000 },
-	{name: "Chili Dog", price: "$5.99", stock: 1000 },
-	{name: "Double Dog", price: "$7.99", stock: 1000 },
-]);
+    {name: "Regular Dog", price: "$2.99", stock: 1000 },
+    {name: "Chili Dog", price: "$5.99", stock: 1000 },
+    {name: "Double Dog", price: "$7.99", stock: 1000 }]);
 const menuItems = [
     ...(checkIsHomeGame() ? homeGameDealsMenu : standardMenuItems),
     {
@@ -337,7 +329,7 @@ const menuItems = [
 
 <HotDogStand
     bannerText={"Frank's Hot Dogs And Lemonade"}
-	bannerTextColor={isBreastCancerAwarenessMonth ? "pink" : "blue"}
+    bannerTextColor={isBreastCancerAwarenessMonth ? "pink" : "blue"}
     menuItems={menuItems}
 />
 ```
@@ -350,15 +342,13 @@ Allowing the consumer to pass in arbitrary menu items brings at hand the questio
 
 In the next section we'll explore more improvements to the `HotDogStand` component.
 
-
-
 ### Blobs
 
 In the last section the `HotDogStand` component was refactored to reduce props, improve clarity, and improve flexibility. But it's still a bit blobby. A "blob component" is a component that requires a longlist of props, and starts to look more like a giant configuration file. The props are typically rigid and constantly require adding more options to support new edge cases or contexts. Overtime, these components become unwieldy, less reusable, and harder to decompose. The concrete sets in.
 
 Good React looks more like an extension of HTML and less like a few giant configuration blobs. Here's the `HotDogStand` decomposed into pleasant HTML-like components.
 
-```react
+```jsx
 import { HotDogStand, standardMenuItems, standardBannerText } ...;
 
 return (
@@ -366,26 +356,26 @@ return (
         {standardBannerText}
     </HotDogStand.Banner>
     <HotDogStand.Menu>
-    	<HotDogStand.MenuItem>
-    		[Daily Special] Churros - $1.99
-    	</HotDogStand.MenuItem>
-    	{standardMenuItems.map(item =>
-    		<HotDogStand.MenuItem key={item.name}>
-    			{`${item.name} - ${item.price}`}
-    		</HotDogStand.MenuItem>)}
+        <HotDogStand.MenuItem>
+            [Daily Special] Churros - $1.99
+        </HotDogStand.MenuItem>
+        {standardMenuItems.map(item =>
+            <HotDogStand.MenuItem key={item.name}>
+                {`${item.name} - ${item.price}`}
+            </HotDogStand.MenuItem>)}
     </HotDogStand.Menu>
 );
 ```
 
 Now callers of `HotDogStand` can build specific structure for their unique needs. A default `HotDogStand` with the usual structure can be exported as `HotDogStand.Default`. Here's the updated `HotDogStand` module.
 
-```react
+```jsx
 import React from 'react';
 
 interface MenuItem {
-	name: string;
-	price: string;
-	stock: number;
+    name: string;
+    price: string;
+    stock: number;
 }
 
 interface Props {
@@ -396,10 +386,9 @@ interface Props {
 
 export const standardBannerText = "Frank's Hot Dogs";
 export const standardMenu: MenuItem[] = Object.freeze([
-	{name: "Regular Dog", price: "$4.99", stock: 1000 },
+    {name: "Regular Dog", price: "$4.99", stock: 1000 },
     {name: "Chili Dog", price: "$6.99", stock: 1000 },
-	{name: "Double Dog", price: "$7.99", stock: 1000 },
-]);
+    {name: "Double Dog", price: "$7.99", stock: 1000 }]);
 
 // Pretend these have useful CSS stylings and aren't plain HTML tags.
 Menu = ({children, ...rest}) => <ul {...rest}>{children}</ul>;
@@ -415,8 +404,8 @@ function Default(props: Props) {
             <Menu>
                 {'/* Name is treated as a unique key for convenience. */'}
                 {menuItems.map(item => stock > 0 ?
-                	<MenuItem key={item.name}>{`${item.name} ${item.price}`}</MenuItem> :
-                	<MenuItem key={item.name}><s>{`${item.name} ${item.price}`}</s></MenuItem>);
+                    <MenuItem key={item.name}>{`${item.name} ${item.price}`}</MenuItem> :
+                    <MenuItem key={item.name}><s>{`${item.name} ${item.price}`}</s></MenuItem>);
                 )}
             </Menu>
         </MenuItem>
@@ -434,15 +423,13 @@ A diligent reader may note these components are possibly too granular. Without a
 
 It may be tempting to apply this pattern to every blob, but blobs are not necessarily bad. Near the top levels of the React tree, they may even be essential. This is merely another tool in the React developer's belt.
 
-
-
 ### Hook Abuse
 
 A standard tool in React is the hook. However, its forgotten brother, the plain old function, is also a useful tool. Hooks with a giant dependency lists are prevalent in React,
 
-```react
+```jsx
 const doFoobar = useCallback(() => {
-	... handle stuff here.
+    ... handle stuff here.
 }, [... dozens of dependencies... ]);
 ```
 
@@ -450,30 +437,30 @@ The issue is compounded when `doFoobar`'s dependencies are also callbacks with t
 
 ```javascript
 function doFoobar(dependency1, dependency2, ...) {
-	...handle stuff here.
+    ...handle stuff here.
 }
 ```
 
 The function version can handle state updates in a few ways.
 
-```react
+```jsx
 // Pass the `set` hook function directly.
 function doFoobar(dependency1, dependency2, ..., setName) {
-	... compute some result here.
-	setName(result);
+    ... compute some result here.
+    setName(result);
 }
 
 function BazComponent(props) {
     const [name, setName] = useState("");
     return (
-    	<input
-        	onChange={() => doFoobar(..., setName)}
+        <input
+          onChange={() => doFoobar(..., setName)}
         />
     );
 }
 ```
 
-```react
+```jsx
 // Return the result directly
 function doFoobar(dependency1, dependency2, ...) {
     ... compute some result here.
@@ -483,11 +470,11 @@ function doFoobar(dependency1, dependency2, ...) {
 function BazComponent(props) {
     const [name, setName] = useState("");
     return (
-    	<input
-        	onChange={() => {
-            	const result = doFoobar(...);
-            	setName(result);
-        	}}
+        <input
+            onChange={() => {
+                const result = doFoobar(...);
+                setName(result);
+            }}
         />
     );
 }
@@ -495,26 +482,24 @@ function BazComponent(props) {
 
 The later is normally preferred as it is usually less coupled, more reusable, and more pure.
 
-
-
 ### From Booleans to Enums
 
 Booleans are perfect at expressing binary state, on or off. They should be avoided for "one and only one" situations.
 
-```react
+```jsx
 function TextEditor(props) {
-    // TextEditor is always one (and only one) of these modes.
-	const [isWriteMode, setIsWriteMode] = useState(true);
-    const [isEditMode, setIsEditMode] = useState(false);
-    const [isHotkeyMode, setIsHotkeyMode] = useState(false);
-    
-    return <div>...</div>;
+  // TextEditor is always one (and only one) of these modes.
+  const [isWriteMode, setIsWriteMode] = useState(true);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isHotkeyMode, setIsHotkeyMode] = useState(false);
+
+  return <div>...</div>;
 }
 ```
 
 Becomes,
 
-```react
+```jsx
 enum Mode {
     Write,
     Edit,
@@ -523,7 +508,7 @@ enum Mode {
 
 function TextEditor(props) {
     // TextEditor is always in one (and only one) of these modes.
-	const [mode, setMode] = useState(Mode.Write);
+    const [mode, setMode] = useState(Mode.Write);
 
     return <div>...</div>;
 }
@@ -533,25 +518,21 @@ By converting the mode from Boolean flags to a single enum, the code is clearer 
 
 ```javascript
 export const mode = Object.freeze({
-	write: "write", // or write: Symbol('write')
-	edit: "edit",
-	hotkey: "hotkey",
+  write: "write", // or write: Symbol('write')
+  edit: "edit",
+  hotkey: "hotkey",
 });
 ```
-
-
 
 ## Experimental Patterns
 
 In this section, patterns that have arisen but are not necessarily widespread or standardized are presented. Readers are welcome to open a [poll request](https://github.com/ELanning/beginner-to-intermediate-react/pulls) with their own patterns.
 
-
-
 ### MC-V Trees
 
 A standard division of UI responsibilities is the concept of MVC, or Model-View-Controller. For example, the model may be the user's information, including email address, name, and phone number. The view might be the "sign up" page. And the controller being the component that handles updating the model. In React, this is typically done all in one component.
 
-```react
+```jsx
 function SignUpPage(props) {
     // Model.
     const [name, setName] = useState(null);
@@ -565,10 +546,10 @@ function SignUpPage(props) {
     const handleSubmit = useCallback(e => ...);
 
     // View.
-	return (
-    	<div>
-        	<input name="name" onChange={handleNameChange} />
-        	<input name="email" onChange={handleEmailChange} />
+    return (
+        <div>
+            <input name="name" onChange={handleNameChange} />
+            <input name="email" onChange={handleEmailChange} />
             <input name="phone" onChange={handlePhoneChange} />
             <button name="submit" onChange={handleSubmit} />
         </div>
@@ -594,10 +575,10 @@ Pure view components are also easier to test and reason about than stacked MVC c
 
 Here's how a typical MC-V tree setup might look at the code level,
 
-```react
+```jsx
 enum View {
     EmailStep,
-	UserInfoStep,
+    UserInfoStep,
     FinishedStep,
 };
 
@@ -653,7 +634,7 @@ export function useEmailStep() {
 // Pure view component.
 export function UserInfoStep(props) {
     return <div>
-    	<Header>Enter your user info</Header>
+        <Header>Enter your user info</Header>
         ... rest of stuff ..
     </div>
 }
@@ -663,74 +644,72 @@ export function UserInfoStep(props) {
 
 If this were a singular MVC component, the views would typically become intertwined and hard to follow as the component expanded. Note that `EmailStep` and `UserInfoStep` both share the `Header` component. In typical MVC setups this is expressed with a Boolean check, `<Header>{isEmailStep ? "Enter an email" : "Enter your user info"}</Header>`. This kind of Boolean entanglement looks innocuous, but as seen above, it becomes an issue over time. The above setup minimizes the number of Boolean type checks to a singular switch statement. Good code generally minimizes the amount of control flow needed, and refactoring to MC-V trees can help accomplish this.
 
-
-
 ### Smart Children
 
 As discussed earlier, a common refactor is changing Blob components into granular building blocks and letting consumers build their own structure. However, sometimes we want to include structure into our components. One approach to this is letting the consumer pass in React components or nodes as props.
 
-```react
+```jsx
 <Header
-	icon={<BellIcon />}
-	title={<b>Hello world</b>}
-	// other props here
+  icon={<BellIcon />}
+  title={<b>Hello world</b>}
+  // other props here
 />
 ```
 
 There is nothing wrong with this, but for larger, more complex projects the following is better:
 
-```react
+```jsx
 <Header>
-	<BellIcon />
-	<b>Hello world</b>
+  <BellIcon />
+  <b>Hello world</b>
 </Header>
 ```
 
 Sometimes the usual `children` prop works. However, if the `Icon` is in the top right of the layout, and the `Title` is underneath a few other components, then the typical `children` prop does not work and we must use the pattern in the first example. Smart Children gets the best of both worlds, with a few minor drawbacks.
 
-```react
+```jsx
 <Header>
-	<Header.Icon>
-		<BellIcon />
-	</Header.Icon>
-	<Header.Title>
-		<b>Hello world</b>
-	</Header.Title>
+  <Header.Icon>
+    <BellIcon />
+  </Header.Icon>
+  <Header.Title>
+    <b>Hello world</b>
+  </Header.Title>
 </Header>
 ```
 
 Here's how this is implemented in React.
 
-```react
+```jsx
 function Icon({ children, ...rest }) =>
-	<div {...rest}>{children}</div>;
+    <div {...rest}>{children}</div>;
 
 function Title({ children, ...rest }) =>
-	<div {...rest}>{children}</div>;
+    <div {...rest}>{children}</div>;
 
 function Header(props) {
-	const titles = React.Children.toArray(children).filter(
-		child => child.type === Icon,
-	);
+    const titles = React.Children.toArray(children).filter(
+        child => child.type === Icon,
+    );
     const icons = React.Children.toArray(children).filter(
-		child => child.type === Title,
-	);
+        child => child.type === Title,
+    );
 
-	return (
-		<div>
-			// ... lots of stuff here
-			<div className="icons">
-				{icons}
-			</div>
+    return (
+        <div>
+            // ... lots of stuff here
+            <div className="icons">
+                {icons}
+            </div>
 
-			// ... other stuff
-			<div className="title">
-				{titles}
-			</div>
+            // ... other stuff
+            <div className="title">
+                {titles}
+            </div>
 
             // ... more content
-		</div>
-	);
+        </div>
+    );
 }
 
 Header.Title = Title;
@@ -739,8 +718,6 @@ export Header;
 ```
 
 We now have more classic HTML style code and have moved a bit away from blobs. However, this is not without cost. There is more boilerplate involved and developers must know that `Header.Title` and `Header.Icon` are "smart" components that get placed differently than regular `children`. If this pattern is used regularly it is usually not an issue. However, the "smart" components should be documented somehow.
-
-
 
 ## References
 
@@ -755,4 +732,3 @@ We now have more classic HTML style code and have moved a bit away from blobs. H
 [5] Eric S. Raymond, _The Art of Unix Programming_
 
 [6] Andy Hunt and Dave Thomas, _The Pragmatic Programmer_
-
