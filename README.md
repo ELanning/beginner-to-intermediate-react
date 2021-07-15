@@ -138,7 +138,7 @@ This section will cover common anti-patterns in React and give the reader a few 
 
 Refactoring rarely modified or used code is effort better spent elsewhere. Not every component or function needs to be a work of art. Throwing a few functions into a small local module named `utils.ts` is rarely a long term maintenance issue, provided the code is refactored as necessary. However, a massively tangled global module may be a different story.
 
-Another important consideration is project size and complexity. Best practices for larger projects many not be applicable with prototypes or simple projects. If a programmer is only familiar with smaller, less complex projects, many of these recommendations will rightfully come across as needless or overly complicating.
+Another important consideration is project size and complexity. Best practices for larger projects may not be applicable with prototypes or simple projects. If a programmer is only familiar with smaller, less complex projects, many of these recommendations will rightfully come across as needless or overly complicating.
 
 ### Component Design and Boolean Props
 
