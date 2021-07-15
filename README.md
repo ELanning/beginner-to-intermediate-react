@@ -657,7 +657,7 @@ As discussed earlier, a common refactor is changing Blob components into granula
 />
 ```
 
-There is nothing wrong with this, but for larger, more complex projects the following is better:
+There is nothing wrong with this, but an HTML like design is preferred:
 
 ```jsx
 <Header>
