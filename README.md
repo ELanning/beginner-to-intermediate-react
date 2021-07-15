@@ -155,9 +155,11 @@ interface Props {
 function HotDogStand(props: Props) {
   const { bannerTextColor, hasLemonade } = props;
   const bannerText = "Frank's Hot Dogs" + (hasLemonade ? " And Lemonade" : "");
+  const bannerStyle = { color: bannerTextColor };
+
   return (
     <div>
-      <div style={{ color: bannerTextColor }}>{bannerText}</div>
+      <div style={bannerStyle}>{bannerText}</div>
       <ul>
         <li>Regular Dog $4.99</li>
         <li>Chili Dog $6.99</li>
@@ -205,16 +207,13 @@ function HotDogStand(props: Props) {
     "Regular Dog " + regularDogPrice
   );
   const chiliDogPrice = isHomeGameDealsOn ? "$5.99" : "6.99";
+  const bannerStyle = {
+    color: isBreastCancerAwarenessMonth ? "pink" : bannerTextColor,
+  };
 
   return (
     <div>
-      <div
-        style={{
-          color: isBreastCancerAwarenessMonth ? "pink" : bannerTextColor,
-        }}
-      >
-        {bannerText}
-      </div>
+      <div style={bannerStyle}>{bannerText}</div>
       <ul>
         <li>{regularDogText}</li>
         <li>Chili Dog {chiliDogPrice}</li>
@@ -294,9 +293,11 @@ export const standardMenu: MenuItem[] = Object.freeze([
 
 function HotDogStand(props: Props) {
     const { bannerTextColor, menuItems } = props;
+    const bannerStyle = {"color": bannerTextColor};
+
     return (
         <div>
-            <div style={{"color": bannerTextColor}}>{bannerText}</div>
+            <div style={bannerStyle}>{bannerText}</div>
             <ul>
                 {'/* Name is treated as a unique key for convenience. */'}
                 {menuItems.map(item => stock > 0 ?
@@ -592,7 +593,7 @@ function SignUpPage(props) {
     // User info step state.
     const { name, address, phoneNumber } = useUserInfoStep();
 
-    // Finished step.
+    // Finished step state.
     const { animationState, handleAnimationChange } = useFinishedStep();
 
     // Pure View components.
