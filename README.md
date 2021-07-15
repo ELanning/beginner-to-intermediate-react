@@ -391,10 +391,10 @@ export const standardMenu: MenuItem[] = Object.freeze([
     {name: "Double Dog", price: "$7.99", stock: 1000 }]);
 
 // Pretend these have useful CSS stylings and aren't plain HTML tags.
-Menu = ({children, ...rest}) => <ul {...rest}>{children}</ul>;
-MenuItem = ({children, ...rest}) => <li {...rest}>{children}</li>;
-Banner = ({children, ...rest}) => <div {...rest}>{children}</div>;
-HotDogStand = ({children, ...rest}) => <div {...rest}>{children}</div>;
+const Menu = ({children, ...rest}) => <ul {...rest}>{children}</ul>;
+const MenuItem = ({children, ...rest}) => <li {...rest}>{children}</li>;
+const Banner = ({children, ...rest}) => <div {...rest}>{children}</div>;
+const HotDogStand = ({children, ...rest}) => <div {...rest}>{children}</div>;
 
 function Default(props: Props) {
     const { bannerTextColor, menuItems } = props;
@@ -681,10 +681,10 @@ Sometimes the usual `children` prop works. However, if the `Icon` is in the top 
 Here's how this is implemented in React.
 
 ```jsx
-function Icon({ children, ...rest }) =>
+const Icon = ({ children, ...rest }) =>
     <div {...rest}>{children}</div>;
 
-function Title({ children, ...rest }) =>
+const Title = ({ children, ...rest }) =>
     <div {...rest}>{children}</div>;
 
 function Header(props) {
