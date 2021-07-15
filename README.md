@@ -19,7 +19,7 @@
 
 ## Intended Audience
 
-This work is intended for readers who are familiar with TypeScript and React syntax and idioms, who are not necessarily experts. The reader may have created a handful of React components. Experienced programmers can quickly get up to speed by reading the [TypeScript](https://www.typescriptlang.org/docs/) and [React documentation](https://reactjs.org/docs/getting-started.html).
+This work is intended for beginners who are familiar with TypeScript and React syntax and idioms. The reader may have created a handful of React components. Experienced programmers can quickly get up to speed by reading the [TypeScript](https://www.typescriptlang.org/docs/) and [React documentation](https://reactjs.org/docs/getting-started.html). The end goal is to provide the reader with a set of tools and guidelines for creating better React components.
 
 ## Tools
 
@@ -33,7 +33,7 @@ A code formatting tool keeps stylistic consistency (tabs vs spaces) across sourc
 
 ## Fundamentals Through The Lens of React
 
-There are many guidelines and heuristics that software developers apply when writing code. As a beginner, it is impossible to keep them in mind at all times. As experience grows, guidelines become part of the subconscious. Stating guidelines is easy. However, internalizing, understanding, and feeling the deeper meaning requires years of effort. It is still useful to share a small fraction of these guidelines and provide demonstrative examples. Knowing such guidelines allows a framework for evaluation, and a path towards improvement. For brevity, many guidelines will not be covered. However, entire books have been written on guidelines and are available for the curious reader. The references provide a great start for additional reading [[1]](#References)[[2]](#References)[[3]](#References)[[4]](#References)[[5]](#References)[[6]](#References).
+There are many guidelines and heuristics that software developers apply when writing code. As a beginner, it is impossible to keep them in mind at all times. As experience grows, guidelines become part of the subconscious. Stating guidelines is easy. However, internalizing, understanding, and feeling the deeper meaning requires years of effort. It is still useful to share a small fraction of these guidelines and provide demonstrative examples. Knowing such guidelines allows a framework for evaluation, and a path towards improvement. For brevity, many guidelines will not be covered. However, entire books have been written on guidelines and are available for the curious reader. The references provide a great start for additional reading [[1]](#references)[[2]](#references)[[3]](#references)[[4]](#references)[[5]](#references)[[6]](#references).
 
 ### Simplicity
 
@@ -92,7 +92,7 @@ At lower levels, this becomes obvious, but this should be the case in the mid to
 
 ### DRY
 
-Most beginner to intermediate developers have heard of "DRY", or "Don't Repeat Yourself" [[6]](#References). However, it is more aptly called the "Single Point of Truth" principle (SPOT) [[5]](#References).
+Most beginner to intermediate developers have heard of "DRY", or "Don't Repeat Yourself" [[6]](#references). However, it is more aptly called the "Single Point of Truth" principle (SPOT) [[5]](#references).
 
 The principle states that information should live in one place, and one place only. For example, a file called `colorPalette.ts` with a list of theme color codes is far preferable to repeatedly copy pasting the color codes throughout the app. This is not necessarily to avoid the "magic numbers" of color codes, but to encode a single place for the apps color palette. When the color palette is updated, refactoring becomes easier by explicitly documenting which spots need to be checked. DRY code makes connections easy to follow. Conversely, dangerous code hides connections. When this happens, deleting innocuous lines in one file silently breaks another part of the codebase.
 
@@ -228,7 +228,7 @@ function HotDogStand(props: Props) {
 }
 ```
 
-The code has become a big ball of mud. As John Outserhout notes, bad software is usually not the result of one bad decision, it is the accumulation of hundreds of papercuts [[3]](#References).
+The code has become a big ball of mud. As John Outserhout notes, bad software is usually not the result of one bad decision, it is the accumulation of hundreds of papercuts [[3]](#references).
 
 There are many things markedly wrong with this code. A casual reader couldn't know what this invocation does without looking at the internals of `HotDogStand`.
 
