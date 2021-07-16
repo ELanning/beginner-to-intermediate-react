@@ -690,10 +690,10 @@ const Title = ({ children, ...rest }) =>
 
 function Header(props) {
     const titles = React.Children.toArray(children).filter(
-        child => child.type === Icon,
+        child => child.type === Title,
     );
     const icons = React.Children.toArray(children).filter(
-        child => child.type === Title,
+        child => child.type === Icon,
     );
 
     return (
