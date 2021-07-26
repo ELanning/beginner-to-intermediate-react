@@ -542,8 +542,8 @@ function SignUpPage(props) {
 
     // Controller.
     const handleNameChange = useCallback(e => { ... setName(...)});
-    const handleEmailChange = useCallback(e => { ... setName(...)});
-    const handlePhoneChange = useCallback(e => { ... setName(...)});
+    const handleEmailChange = useCallback(e => { ... setEmail(...)});
+    const handlePhoneChange = useCallback(e => { ... setPhone(...)});
     const handleSubmit = useCallback(e => ...);
 
     // View.
