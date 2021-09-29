@@ -684,16 +684,18 @@ Sometimes the usual `children` prop works. However, if the `Icon` is in the top 
 Here's how this is implemented in React.
 
 ```jsx
-const Icon = ({ children, ...rest }) => <div {...rest}>{children}</div>;
+const Icon = ({ children, ...rest }) =>
+  <div {...rest}>{children}</div>;
 
-const Title = ({ children, ...rest }) => <div {...rest}>{children}</div>;
+const Title = ({ children, ...rest }) =>
+  <div {...rest}>{children}</div>;
 
 function Header(props) {
   const titles = React.Children.toArray(children).filter(
-    (child) => child.type === Title
+    child => child.type === Title
   );
   const icons = React.Children.toArray(children).filter(
-    (child) => child.type === Icon
+    child => child.type === Icon
   );
 
   return (
