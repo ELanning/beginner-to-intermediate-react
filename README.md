@@ -38,10 +38,12 @@ There are many guidelines and heuristics that software developers apply when wri
 ### Simplicity
 
 > Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.
-> Antoine de Saint-Exupery.
 >
+> ― Antoine de Saint-Exupery.
+
 > The hardest program I’ve ever written, once you strip out the whitespace, is 3,835 lines long. That handful of code took me almost a year to write. Granted, that doesn’t take into account the code that didn’t make it. The commit history shows that I deleted 20,704 lines of code over that time. Every surviving line has about three fallen comrades.
-> [Bob Nystrom](http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written/)
+>
+> ― [Bob Nystrom](http://journal.stuffwithstuff.com/2015/09/08/the-hardest-program-ive-ever-written/)
 
 Simple code does not add unnecessary context, nor does it omit necessary context. It meets the requirements concisely. A programmer reads simple code and thinks nothing of it. It is how they imagine they would've solved the problem in the first draft. However, they are deluded. Writing simple code is a process that is not as straightforward as the final code itself. Thus, in its poetic simplicity, simple code is often underappreciated. Similar to a server admin with 99.99% uptime; nobody notices a job well done. However, constantly striving for simple code is a joy unto itself, wherein the process is often more enjoyable than the end result.
 
@@ -409,7 +411,7 @@ function Default(props: Props) {
                     <MenuItem key={item.name}><s>{`${item.name} ${item.price}`}</s></MenuItem>);
                 )}
             </Menu>
-        </MenuItem>
+        </HotDogStand>
     );
 }
 
@@ -417,7 +419,7 @@ HotDogStand.Menu = Menu;
 HotDogStand.MenuItem = MenuItem;
 HotDogStand.Banner = Banner;
 HotDogStand.Default = Default;
-export HotDogStand;
+export { HotDogStand };
 ```
 
 A diligent reader may note these components are possibly too granular. Without a standard set of CSS applied, or more meat, these components are a little too barebones. However, this is merely a toy example. In real projects, this pattern can be applied much more ergonomically with great benefit.
@@ -682,40 +684,32 @@ Sometimes the usual `children` prop works. However, if the `Icon` is in the top 
 Here's how this is implemented in React.
 
 ```jsx
-const Icon = ({ children, ...rest }) =>
-    <div {...rest}>{children}</div>;
+const Icon = ({ children, ...rest }) => <div {...rest}>{children}</div>;
 
-const Title = ({ children, ...rest }) =>
-    <div {...rest}>{children}</div>;
+const Title = ({ children, ...rest }) => <div {...rest}>{children}</div>;
 
 function Header(props) {
-    const titles = React.Children.toArray(children).filter(
-        child => child.type === Title,
-    );
-    const icons = React.Children.toArray(children).filter(
-        child => child.type === Icon,
-    );
+  const titles = React.Children.toArray(children).filter(
+    (child) => child.type === Title
+  );
+  const icons = React.Children.toArray(children).filter(
+    (child) => child.type === Icon
+  );
 
-    return (
-        <div>
-            // ... lots of stuff here
-            <div className="icons">
-                {icons}
-            </div>
-
-            // ... other stuff
-            <div className="title">
-                {titles}
-            </div>
-
-            // ... more content
-        </div>
-    );
+  return (
+    <div>
+      // ... lots of stuff here
+      <div className="icons">{icons}</div>
+      // ... other stuff
+      <div className="title">{titles}</div>
+      // ... more content
+    </div>
+  );
 }
 
 Header.Title = Title;
 Header.Icon = Icon;
-export Header;
+export { Header };
 ```
 
 We now have more classic HTML style code and have moved a bit away from blobs. However, this is not without cost. There is more boilerplate involved and developers must know that `Header.Title` and `Header.Icon` are "smart" components that get placed differently than regular `children`. If this pattern is used regularly it is usually not an issue. However, the "smart" components should be documented somehow.
