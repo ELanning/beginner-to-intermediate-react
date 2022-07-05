@@ -529,7 +529,7 @@ export const mode = Object.freeze({
 
 ## Experimental Patterns
 
-In this section, patterns that have arisen but are not necessarily widespread or standardized are presented. Readers are welcome to open a [poll request](https://github.com/ELanning/beginner-to-intermediate-react/pulls) with their own patterns.
+In this section, patterns that have arisen but are not necessarily widespread or standardized are presented. Readers are welcome to open a [pull request](https://github.com/ELanning/beginner-to-intermediate-react/pulls) with their own patterns.
 
 ### MC-V Trees
 
